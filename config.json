@@ -1,5 +1,11 @@
 {
     "my": "Malaysia",
     "in": "India",
-    "au": "Australia"
+    "au": "Australia",
+    "nz": "New Zealand",
+    "hk": "Hong Kong",
+    "jp": "Japan",
+    "vn": "Vietnam",
+    "us": "USA",
+    "ca": "Canada"
 }

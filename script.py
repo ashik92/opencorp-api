@@ -12,10 +12,10 @@ API_TOKEN = 'z9l30RgC5L7GCpiZZ9ix'
 order = "created_at"
 per_page = 10
 now = datetime.now()
-created_at_before = now.isoformat()
+current_time = now.isoformat()
 
 
-page_count = 5  # should be 100 requests
+page_count = 1  # should be 100 requests
 company_data = []  # store company data of all pages
 
 
@@ -43,14 +43,17 @@ def get_url(country_code, api_token, created_at, page, per_page=per_page, order=
     return f"https://api.opencorporates.com/companies/search?api_token={api_token}&country_code={country_code}&fields=normalised_name&inactive=false&per_page={per_page}&order={order}&created_at=:{created_at}&page={page}"
 
 
-def get_last_company_created_date(page):
+def get_last_company_created_date():
     '''
     takes a response and returns the last company created_at data
     '''
-    return page['results']['companies'][-1]['company']['created_at']
+    return company_data[-1]['created_at']
 
 
 def save_results(country_code):
+    if not company_data:
+        return
+
     file_name = {}
     # loading the config file
     with open('config.json', 'r') as f:
@@ -65,8 +68,13 @@ def save_results(country_code):
         os.makedirs(path_)
 
     # saving results in the respective country directory
-    with open(f'{file_name[country_code]}/{file_name[country_code]}-{created_at_before}.json', 'w') as f:
+    with open(f'{file_name[country_code]}/{file_name[country_code]}-{current_time}.json', 'w') as f:
         f.write(json.dumps(company_data))
+    last_date = get_last_company_created_date()
+    print(last_date)
+    with open('log.txt', 'a') as f:
+        f.write(
+            f"cmd ran at: {current_time} country_code: {country_code} created_date of last item: {last_date} ")
 
 
 if __name__ == '__main__':
