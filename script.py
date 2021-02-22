@@ -8,7 +8,7 @@ import pprint
 
 
 # URL args
-api_token = 'z9l30RgC5L7GCpiZZ9ix'
+API_TOKEN = 'z9l30RgC5L7GCpiZZ9ix'
 order = "created_at"
 per_page = 10
 now = datetime.now()
@@ -22,7 +22,7 @@ company_data = []  # store company data of all pages
 def main(country, created_at):
     for i in range(page_count):
         res = requests.get(url=get_url(
-            country_code=country, page=i+1, api_token=api_token, created_at=created_at))
+            country_code=country, page=i+1, api_token=API_TOKEN, created_at=created_at))
         if res.status_code == 200:
             print('response is 200')
             r = res.json()
