@@ -9,7 +9,6 @@ import pprint
 
 # URL args
 api_token = 'z9l30RgC5L7GCpiZZ9ix'
-# country_code = 'my'
 order = "created_at"
 per_page = 10
 now = datetime.now()
@@ -22,9 +21,8 @@ company_data = []  # store company data of all pages
 
 def main(country, created_at):
     for i in range(page_count):
-        res = requests.get(url=get_url(country_code=country,
-                                       page=i+1, api_token=api_token,
-                                       created_at=created_at))
+        res = requests.get(url=get_url(
+            country_code=country, page=i+1, api_token=api_token, created_at=created_at))
         if res.status_code == 200:
             print('response is 200')
             r = res.json()
@@ -32,21 +30,16 @@ def main(country, created_at):
             companies = r['results']["companies"]
             for company in companies:
                 company_data.append(company['company'])
-            # break
         elif res.status_code == 403 or res.status_code == 503:
             print('daily requests limit exceeds')
             break
         else:
-            print(f'response status code: {res.status_code}')
+            print(f'response status code: {res.status_code} at page: {i}')
             print(res.text)
             break
 
 
-def get_url(country_code, api_token='z9l30RgC5L7GCpiZZ9ix',
-            order='created_at',
-            page=1,
-            created_at=created_at_before,
-            per_page=per_page):
+def get_url(country_code, api_token, created_at, page, per_page=per_page, order='created_at'):
     return f"https://api.opencorporates.com/companies/search?api_token={api_token}&country_code={country_code}&fields=normalised_name&inactive=false&per_page={per_page}&order={order}&created_at=:{created_at}&page={page}"
 
 
@@ -77,12 +70,11 @@ def save_results(country_code):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Optional app description')
+    parser = argparse.ArgumentParser(description='Argument description')
     parser.add_argument('-country', type=str,
                         help='give the country code')
     parser.add_argument('-created_at', type=str,
                         help='crawle data created at before the given date')
-
     args = parser.parse_args()
 
     if args.country and args.created_at:
